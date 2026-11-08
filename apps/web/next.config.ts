@@ -23,6 +23,7 @@ const isProd = process.env.NODE_ENV !== 'development';
 const webOutputMode = process.env.OD_WEB_OUTPUT_MODE;
 const isServerOutput = webOutputMode === 'server' || webOutputMode === 'standalone';
 const shouldStaticExport = isProd && !isServerOutput;
+const canvasBasePath = process.env.OD_WEB_BASE_PATH?.trim().replace(/\/$/, '') || '';
 
 const WEB_ROOT = dirname(fileURLToPath(import.meta.url));
 
@@ -196,6 +197,7 @@ export function cmsHostReleaseFingerprint(
 }
 
 const nextConfig: NextConfig = {
+  ...(canvasBasePath ? { basePath: canvasBasePath, assetPrefix: canvasBasePath } : {}),
   env: {
     // Embedded in the client at build time. Packaged servers use the already
     // compiled client and need not retain source files to load this config.
